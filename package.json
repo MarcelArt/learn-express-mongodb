@@ -1,0 +1,22 @@
+{
+  "name": "learn-express-mongodb",
+  "version": "1.0.0",
+  "description": "belajar express+mongodb backend",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcelArt/learn-express-mongodb.git"
+  },
+  "author": "Marcel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcelArt/learn-express-mongodb/issues"
+  },
+  "homepage": "https://github.com/MarcelArt/learn-express-mongodb#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
