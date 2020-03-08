@@ -1,8 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 let Product = require('../models/product');
+const storage = require('../config/storage');
 
 const router = express.Router();
+// const upload = multer({dest: 'uploads'});
+const upload = multer({storage});
 
 router.get('/all', (req, res) => {
 	Product.find({}, (err, products) => {
@@ -36,18 +40,40 @@ router.get('/:id', (req, res) => {
 	});
 });
 
-router.post('/add', verifyToken, (req, res) => {
+
+router.post('/edit/:id', (req, res) => {
+	let product = {};
+	let query = {_id: req.params.id};
+	
+	product.name = req.body.name;
+	product.stock = req.body.stock;
+	product.min_stock = req.body.min_stock;
+	product.buy_price = req.body.buy_price;
+	product.sell_price = req.body.sell_price;
+	product.image = req.body.image;
+	
+	Product.update(query, product, err => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.send({message: 'Product updated', status: 201});
+		}
+	});
+});
+
+router.post('/add', verifyToken, upload.single('image'), (req, res) => {
 	jwt.verify(req.token, 'apahayo', (err, data) => {
 		if (err) {
 			res.sendStatus(403);
 		} else {
 			let product = new Product();
+
 			product.name = req.body.name;
 			product.stock = req.body.stock;
 			product.min_stock = req.body.min_stock;
 			product.buy_price = req.body.buy_price;
 			product.sell_price = req.body.sell_price;
-			product.image = req.body.image;
+			product.image = req.file.filename;
 
 			product.save(err => {
 				if (err) {
@@ -65,24 +91,16 @@ router.post('/add', verifyToken, (req, res) => {
 	});
 });
 
-router.post('/edit/:id', (req, res) => {
-	let product = {};
-	let query = {_id: req.params.id};
-
-	product.name = req.body.name;
-	product.stock = req.body.stock;
-	product.min_stock = req.body.min_stock;
-	product.buy_price = req.body.buy_price;
-	product.sell_price = req.body.sell_price;
-	product.image = req.body.image;
-
-	Product.update(query, product, err => {
-		if (err) {
-			console.log(err);
-		} else {
-			res.send({message: 'Product updated', status: 201});
-		}
-	});
+//test upload image
+router.post('/image', upload.single('image'), (req, res) => {
+	try {
+		res.send({
+			file: req.file,
+			name: req.body.filename
+		});
+	} catch (e) {
+		res.sendStatus(400);
+	}
 });
 
 //verify function
