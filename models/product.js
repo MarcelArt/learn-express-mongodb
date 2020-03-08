@@ -9,4 +9,4 @@ let productSchema = mongoose.Schema({
     image: String
 })
 
-let Product = module.exports = mongoose.model('Product', productSchema);
+let Product = module.exports = mongoose.model('Product', productSchema); //Parameter 1 adalah collection mongodb yang dikurangi huruf "s".
