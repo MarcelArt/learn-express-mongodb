@@ -34,29 +34,41 @@ router.get('/:id', (req, res) => {
 		} else {
 			res.send({
 				message: 'ID not found',
-				status: 200
+				status: 401
 			});
 		}
 	});
 });
 
-
-router.post('/edit/:id', (req, res) => {
-	let product = {};
-	let query = {_id: req.params.id};
-	
-	product.name = req.body.name;
-	product.stock = req.body.stock;
-	product.min_stock = req.body.min_stock;
-	product.buy_price = req.body.buy_price;
-	product.sell_price = req.body.sell_price;
-	product.image = req.body.image;
-	
-	Product.update(query, product, err => {
+router.post('/edit/:id', verifyToken, upload.single('image'), (req, res) => {
+	jwt.verify(req.token, 'apahayo', (err, data) => {
 		if (err) {
-			console.log(err);
+			res.sendStatus(403);
 		} else {
-			res.send({message: 'Product updated', status: 201});
+			let product = {};
+			let query = {_id: req.params.id};
+
+			// product.name = req.body.name;
+			// product.stock = req.body.stock;
+			// product.min_stock = req.body.min_stock;
+			// product.buy_price = req.body.buy_price;
+			// product.sell_price = req.body.sell_price;
+			product = req.body;
+			if (req.file) {
+				product.image = req.file.filename;
+			}
+
+			Product.update(query, product, err => {
+				if (err) {
+					res.send({
+						error: err,
+						message: 'Product updated failed',
+						status: 500
+					});
+				} else {
+					res.send({message: 'Product updated', status: 201});
+				}
+			});
 		}
 	});
 });
