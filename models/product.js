@@ -6,7 +6,8 @@ let productSchema = mongoose.Schema({
     min_stock: Number,
     buy_price: Number,
     sell_price: Number,
+    supplier: String,
     image: String
 })
 
-let Product = module.exports = mongoose.model('Product', productSchema); //Parameter 1 adalah collection mongodb yang dikurangi huruf "s".
+let Product = module.exports = mongoose.model('product', productSchema); //Parameter 1 adalah collection mongodb yang dikurangi huruf "s".

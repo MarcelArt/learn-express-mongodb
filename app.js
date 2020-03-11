@@ -9,6 +9,7 @@ const User = require('./models/user');
 
 //routes
 const product_routes = require('./routes/product_routes');
+const service_routes = require('./routes/service_routes');
 
 //init express;
 const app = express();
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 
 //route middlewares
 app.use('/products', product_routes);
+app.use('/services', service_routes);
 
 mongoose.connect('mongodb://127.0.0.1:27017/kouvee');
 let db = mongoose.connection;

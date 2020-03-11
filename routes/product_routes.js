@@ -8,7 +8,7 @@ const router = express.Router();
 // const upload = multer({dest: 'uploads'});
 const upload = multer({storage});
 
-router.get('/all', (req, res) => {
+router.get('/', (req, res) => {
 	Product.find({}, (err, products) => {
 		if (err) {
 			console.log(err);
@@ -85,6 +85,7 @@ router.post('/add', verifyToken, upload.single('image'), (req, res) => {
 			product.min_stock = req.body.min_stock;
 			product.buy_price = req.body.buy_price;
 			product.sell_price = req.body.sell_price;
+			product.supplier = req.body.supplier;
 			product.image = req.file.filename;
 
 			product.save(err => {
