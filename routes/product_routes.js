@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 let Product = require('../models/product');
 const storage = require('../config/storage');
+const verifyToken = require('../utils/verifyToken');
 
 const router = express.Router();
 // const upload = multer({dest: 'uploads'});
@@ -35,6 +36,25 @@ router.get('/:id', (req, res) => {
 			res.send({
 				message: 'ID not found',
 				status: 401
+			});
+		}
+	});
+});
+
+router.get('/delete/:id', verifyToken, (req, res) => {
+	jwt.verify(req.token, 'apahayo', (err, data) => {
+		if (err) {
+			res.sendStatus(403);
+		} else {
+			Product.deleteOne({_id: req.params.id}, error => {
+				if (err) {
+					res.send({error});
+				} else {
+					res.send({
+            message: 'Delete product success',
+            status: 201
+          });
+				}
 			});
 		}
 	});
@@ -115,17 +135,5 @@ router.post('/image', upload.single('image'), (req, res) => {
 		res.sendStatus(400);
 	}
 });
-
-//verify function
-function verifyToken(req, res, next) {
-	const bearerHeader = req.headers['authorization'];
-	if (typeof bearerHeader !== 'undefined') {
-		const [, bearerToken] = bearerHeader.split(' ');
-		req.token = bearerToken;
-		next();
-	} else {
-		res.sendStatus(403);
-	}
-}
 
 module.exports = router;
