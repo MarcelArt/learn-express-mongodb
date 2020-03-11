@@ -47,29 +47,39 @@ app.post('/login', (req, res) => {
 			username
 		},
 		(err, user) => {
-			bcrypt.compare(password, user.password).then(matched => {
-				if (matched) {
-					const token = jwt.sign({user}, 'apahayo');
-					res.send({
-						token,
-						user,
-						message: 'Login Success',
-						status: 201
+			if (user) {
+				bcrypt
+					.compare(password, user.password)
+					.then(matched => {
+						if (matched) {
+							const token = jwt.sign({user}, 'apahayo');
+							res.send({
+								token,
+								user,
+								message: 'Login Success',
+								status: 201
+							});
+						} else {
+							res.send({
+								message: 'Wrong password',
+								status: 401
+							});
+						}
+					})
+					.catch(e => {
+						res.send({
+							error: e,
+							message: 'Login failed',
+							status: 500
+						});
 					});
-				} else {
-					res.send({
-						message: 'Wrong password',
-						status: 401
-					});
-				}
-			})
-			.catch(e => {
+			}
+			else {
 				res.send({
-					error: e,
-					message: 'Login failed',
-					status: 500
-				})
-			});
+					message: 'Username not found',
+					status: 401
+				});
+			}
 		}
 	);
 });
