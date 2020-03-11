@@ -10,6 +10,7 @@ const User = require('./models/user');
 //routes
 const product_routes = require('./routes/product_routes');
 const service_routes = require('./routes/service_routes');
+const buy_transaction_routes = require('./routes/buy_transaction_routes');
 
 //init express;
 const app = express();
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 //route middlewares
 app.use('/products', product_routes);
 app.use('/services', service_routes);
+app.use('/buy', buy_transaction_routes);
 
 mongoose.connect('mongodb://127.0.0.1:27017/kouvee');
 let db = mongoose.connection;

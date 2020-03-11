@@ -1,8 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
 let Service = require('../models/service');
-const storage = require('../config/storage');
 const verifyToken = require('../utils/verifyToken');
 
 const router = express.Router();
